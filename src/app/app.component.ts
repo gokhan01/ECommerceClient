@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { CustomToastrService, ToastrMessageType, ToastrPosition } from './services/ui/custom-toastr.service';
 
 @Component({
@@ -8,10 +9,15 @@ import { CustomToastrService, ToastrMessageType, ToastrPosition } from './servic
 })
 export class AppComponent {
   title = 'ECommerceClient';
-  constructor(private toastr: CustomToastrService) {
-    toastr.message('Hello world!', 'Toastr fun!', {
-      messageType: ToastrMessageType.Info,
-      position: ToastrPosition.TopCenter
-    });
+  constructor(private spinner: NgxSpinnerService) { }
+
+  ngOnInit() {
+    /** spinner starts on init */
+    this.spinner.show("loading3");
+
+    setTimeout(() => {
+      /** spinner ends after 5 seconds */
+      this.spinner.hide("loading3");
+    }, 3000);
   }
 }
