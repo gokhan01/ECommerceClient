@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-declare var $:any
+import { CustomToastrService, ToastrMessageType, ToastrPosition } from './services/ui/custom-toastr.service';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -7,4 +8,10 @@ declare var $:any
 })
 export class AppComponent {
   title = 'ECommerceClient';
+  constructor(private toastr: CustomToastrService) {
+    toastr.message('Hello world!', 'Toastr fun!', {
+      messageType: ToastrMessageType.Info,
+      position: ToastrPosition.TopCenter
+    });
+  }
 }
