@@ -33,7 +33,13 @@ export class CreateComponent extends BaseComponent implements OnInit {
         dismissOthers: true,
         messageType: MessageType.Success,
         position: Position.TopRight
-      })
+      });
+    }, (errorMessage: string) => {
+      this.alertify.message(errorMessage, {
+        dismissOthers: true,
+        messageType: MessageType.Error,
+        position: Position.TopRight
+      });
     });
   }
 }
