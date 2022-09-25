@@ -7,6 +7,7 @@ import { List_Product } from 'src/app/contracts/list_product';
 import { AlertifyService, MessageType, Position } from 'src/app/services/admin/alertify.service';
 import { ProductService } from 'src/app/services/common/models/product.service';
 
+declare var $: any;
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
@@ -16,7 +17,7 @@ export class ListComponent extends BaseComponent implements OnInit, AfterViewIni
   constructor(spinner: NgxSpinnerService, private productService: ProductService, private alertifyService: AlertifyService) {
     super(spinner)
   }
-  displayedColumns: string[] = ['name', 'stock', 'price', 'createdDate', 'updatedDate'];
+  displayedColumns: string[] = ['name', 'stock', 'price', 'createdDate', 'updatedDate', 'edit', 'delete'];
   dataSource: MatTableDataSource<List_Product> = new MatTableDataSource<any>();
 
   @ViewChild(MatPaginator)
@@ -31,13 +32,17 @@ export class ListComponent extends BaseComponent implements OnInit, AfterViewIni
 
   async getProducts() {
     this.showSpinner(SpinnerType.ballAtom);
-    const products: { totalCount: number, products: List_Product[] } = await this.productService.read(this.paginator ? this.paginator.pageIndex : 0, this.paginator ? this.paginator.pageSize : 5, () => this.hideSpinner(SpinnerType.ballAtom), errorMessage => {
-      this.alertifyService.message(errorMessage, {
-        dismissOthers: true,
-        messageType: MessageType.Error,
-        position: Position.TopRight
-      })
-    });
+    const products: { totalCount: number, products: List_Product[] }
+      = await this.productService.read(this.paginator ? this.paginator.pageIndex : 0,
+        this.paginator ? this.paginator.pageSize : 5,
+        () => this.hideSpinner(SpinnerType.ballAtom), errorMessage => {
+          this.hideSpinner(SpinnerType.ballAtom)
+          this.alertifyService.message(errorMessage, {
+            dismissOthers: true,
+            messageType: MessageType.Error,
+            position: Position.TopRight
+          })
+        });
 
     this.dataSource = new MatTableDataSource<List_Product>(products.products);
     this.paginator.length = products.totalCount;
@@ -46,4 +51,10 @@ export class ListComponent extends BaseComponent implements OnInit, AfterViewIni
   async pageChanged() {
     await this.getProducts();
   }
+
+  // delete(id: string, event: MouseEvent) {
+  //   const img = event.target;
+  //   console.log(id)
+  //   console.log($(img).parent().parent().fadeOut(1000))
+  // }
 }
